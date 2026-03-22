@@ -1,32 +1,31 @@
 // EXCEEDING REQUIREMENTS
 // This program goes beyond the basic expectations in several ways.
 //
-// First, it hides more than one word at a time. Instead of removing a single word,
-// it removes three words during each step. This makes the memorization process
-// more engaging and helps the user learn faster.
+// First, it hides multiple words at a time and only selects words that are still visible.
+// This improves the memorization process and avoids repetition.
 //
-// Second, the program keeps track of when all the words have been hidden.
-// Once this happens, it ends automatically. This allows the user to know
-// when they have completed the exercise without any confusion.
+// Second, the program automatically ends when all words are hidden,
+// allowing the user to clearly know when the exercise is complete.
 //
-// Third, the program is carefully organized using separate classes such as
-// Reference, Word, and Scripture. Each class has its own responsibility,
-// which makes the code easier to understand and manage.
+// Third, the program loads scriptures from an external file and stores them
+// in a collection. A random scripture is selected each time the program runs,
+// which provides variety and makes the program more useful.
 //
-// Finally, the overall structure of the program makes it easy to improve in the future.
-// For example, more scriptures could be added or loaded from a file without needing
-// to change the main logic of the program.
+// Fourth, the program is organized into separate classes with clear responsibilities,
+// making it easier to understand and extend in the future.
 
 using System;
+using System.Collections.Generic;
+using System.IO;
 
 class Program
 {
     static void Main(string[] args)
     {
-        Reference reference = new Reference("Proverbs", 3, 5, 6);
+        List<Scripture> scriptures = LoadScriptures("scriptures.txt");
 
-        Scripture scripture = new Scripture(reference,
-        "Trust in the Lord with all thine heart and lean not unto thine own understanding in all thy ways acknowledge him and he shall direct thy paths");
+        Random random = new Random();
+        Scripture scripture = scriptures[random.Next(scriptures.Count)];
 
         string input = "";
 
@@ -48,5 +47,39 @@ class Program
         Console.Clear();
         Console.WriteLine(scripture.GetDisplayText());
         Console.WriteLine("\nAll words are now hidden. Program finished.");
+    }
+
+    static List<Scripture> LoadScriptures(string fileName)
+    {
+        List<Scripture> scriptures = new List<Scripture>();
+
+        string[] lines = File.ReadAllLines(fileName);
+
+        foreach (string line in lines)
+        {
+            string[] parts = line.Split("|");
+
+            string book = parts[0];
+            int chapter = int.Parse(parts[1]);
+            int verse = int.Parse(parts[2]);
+
+            if (parts.Length == 5)
+            {
+                int endVerse = int.Parse(parts[3]);
+                string text = parts[4];
+
+                Reference reference = new Reference(book, chapter, verse, endVerse);
+                scriptures.Add(new Scripture(reference, text));
+            }
+            else
+            {
+                string text = parts[3];
+
+                Reference reference = new Reference(book, chapter, verse);
+                scriptures.Add(new Scripture(reference, text));
+            }
+        }
+
+        return scriptures;
     }
 }

@@ -15,30 +15,42 @@ public class Scripture
 
         foreach (string word in parts)
         {
-            Word w = new Word(word);
-            _words.Add(w);
+            _words.Add(new Word(word));
         }
     }
 
     public void HideRandomWords(int numberToHide)
     {
-        for (int i = 0; i < numberToHide; i++)
+        List<Word> visibleWords = new List<Word>();
+
+        foreach (Word word in _words)
         {
-            int index = _random.Next(_words.Count);
-            _words[index].Hide();
+            if (!word.IsHidden())
+            {
+                visibleWords.Add(word);
+            }
+        }
+
+        int count = Math.Min(numberToHide, visibleWords.Count);
+
+        for (int i = 0; i < count; i++)
+        {
+            int index = _random.Next(visibleWords.Count);
+            visibleWords[index].Hide();
+            visibleWords.RemoveAt(index);
         }
     }
 
     public string GetDisplayText()
     {
-        string text = _reference.GetDisplayText() + " ";
+        string result = _reference.GetDisplayText() + " ";
 
         foreach (Word word in _words)
         {
-            text += word.GetDisplayText() + " ";
+            result += word.GetDisplayText() + " ";
         }
 
-        return text;
+        return result.Trim();
     }
 
     public bool IsCompletelyHidden()
