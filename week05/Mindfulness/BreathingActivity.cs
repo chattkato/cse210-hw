@@ -12,7 +12,7 @@ public class BreathingActivity : Activity
     {
         Start();
 
-        DateTime endTime = DateTime.Now.AddSeconds(_duration);
+        DateTime endTime = DateTime.Now.AddSeconds(GetDuration());
 
         while (DateTime.Now < endTime)
         {

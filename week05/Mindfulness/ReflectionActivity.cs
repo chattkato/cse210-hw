@@ -36,7 +36,7 @@ public class ReflectionActivity : Activity
         Console.WriteLine("\nReflect on the following questions:");
         ShowSpinner(3);
 
-        DateTime endTime = DateTime.Now.AddSeconds(_duration);
+        DateTime endTime = DateTime.Now.AddSeconds(GetDuration());
 
         while (DateTime.Now < endTime)
         {

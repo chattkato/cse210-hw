@@ -29,7 +29,7 @@ public class ListingActivity : Activity
 
         List<string> items = new List<string>();
 
-        DateTime endTime = DateTime.Now.AddSeconds(_duration);
+        DateTime endTime = DateTime.Now.AddSeconds(GetDuration());
 
         while (DateTime.Now < endTime)
         {

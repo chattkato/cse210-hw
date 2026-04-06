@@ -5,7 +5,7 @@ public class Activity
 {
     private string _name;
     private string _description;
-    protected int _duration;
+    private int _duration; // FIXED: now private
 
     public Activity(string name, string description)
     {
@@ -33,6 +33,12 @@ public class Activity
         ShowSpinner(3);
     }
 
+    // Getter to allow derived classes to access duration safely
+    protected int GetDuration()
+    {
+        return _duration;
+    }
+
     protected void ShowSpinner(int seconds)
     {
         string[] spinner = { "|", "/", "-", "\\" };
@@ -45,7 +51,6 @@ public class Activity
             Console.Write(spinner[i]);
             Thread.Sleep(250);
             Console.Write("\b \b");
-
             i = (i + 1) % spinner.Length;
         }
     }
