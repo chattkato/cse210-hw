@@ -5,43 +5,41 @@ public class ReflectionActivity : Activity
 {
     private List<string> _prompts = new List<string>
     {
-        "Think of a time when you stood up for someone else.",
-        "Think of a time when you did something really difficult.",
-        "Think of a time when you helped someone in need.",
-        "Think of a time when you did something truly selfless."
+        "Think of a time when you stood up for someone.",
+        "Think of a time you did something difficult.",
+        "Think of a time you helped someone.",
+        "Think of a time you showed strength."
     };
 
-    private List<string> _questions = new List<string>
-    {
-        "Why was this meaningful to you?",
-        "How did you feel when it was complete?",
-        "What did you learn about yourself?",
-        "How can you apply this in the future?",
-        "What made this different from other times?"
-    };
+    private List<string> _unusedPrompts;
 
     public ReflectionActivity()
         : base("Reflection Activity",
-              "This activity helps you reflect on your strengths.")
+        "Reflect on your strengths and experiences.")
     {
+        _unusedPrompts = new List<string>(_prompts);
     }
 
     public void Run()
     {
         Start();
-
         Random rand = new Random();
 
-        Console.WriteLine("\n" + _prompts[rand.Next(_prompts.Count)]);
-        Console.WriteLine("\nReflect on the following questions:");
+        if (_unusedPrompts.Count == 0)
+            _unusedPrompts = new List<string>(_prompts);
+
+        int index = rand.Next(_unusedPrompts.Count);
+        string prompt = _unusedPrompts[index];
+        _unusedPrompts.RemoveAt(index);
+
+        Console.WriteLine("\n" + prompt);
         ShowSpinner(3);
 
         DateTime endTime = DateTime.Now.AddSeconds(GetDuration());
 
         while (DateTime.Now < endTime)
         {
-            string question = _questions[rand.Next(_questions.Count)];
-            Console.WriteLine("\n" + question);
+            Console.WriteLine("\nReflect...");
             ShowSpinner(4);
         }
 

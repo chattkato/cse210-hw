@@ -4,7 +4,7 @@ public class BreathingActivity : Activity
 {
     public BreathingActivity()
         : base("Breathing Activity",
-              "This activity will help you relax by guiding your breathing.")
+        "Relax by slowly breathing in and out.")
     {
     }
 
@@ -18,6 +18,9 @@ public class BreathingActivity : Activity
         {
             Console.Write("\nBreathe in... ");
             ShowCountdown(4);
+
+            Console.Write("\nHold... ");
+            ShowCountdown(2);
 
             Console.Write("\nBreathe out... ");
             ShowCountdown(4);

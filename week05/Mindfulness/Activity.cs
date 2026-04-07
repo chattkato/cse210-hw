@@ -5,7 +5,7 @@ public class Activity
 {
     private string _name;
     private string _description;
-    private int _duration; // FIXED: now private
+    private int _duration;
 
     public Activity(string name, string description)
     {
@@ -29,11 +29,10 @@ public class Activity
     {
         Console.WriteLine("\nWell done!");
         ShowSpinner(3);
-        Console.WriteLine($"\nYou have completed the {_name} for {_duration} seconds.");
+        Console.WriteLine($"\nYou completed {_name} for {_duration} seconds.");
         ShowSpinner(3);
     }
 
-    // Getter to allow derived classes to access duration safely
     protected int GetDuration()
     {
         return _duration;
@@ -49,7 +48,7 @@ public class Activity
         while (DateTime.Now < endTime)
         {
             Console.Write(spinner[i]);
-            Thread.Sleep(250);
+            Thread.Sleep(200);
             Console.Write("\b \b");
             i = (i + 1) % spinner.Length;
         }

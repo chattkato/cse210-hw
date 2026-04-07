@@ -5,40 +5,53 @@ public class ListingActivity : Activity
 {
     private List<string> _prompts = new List<string>
     {
-        "Who are people you appreciate?",
-        "What are your personal strengths?",
-        "Who have you helped recently?",
-        "Who are your personal heroes?"
+        "Who do you appreciate?",
+        "What are your strengths?",
+        "Who have you helped?",
+        "Who inspires you?"
     };
+
+    private List<string> _unusedPrompts;
 
     public ListingActivity()
         : base("Listing Activity",
-              "This activity helps you list positive things in your life.")
+        "List as many positive things as you can.")
     {
+        _unusedPrompts = new List<string>(_prompts);
     }
 
-    public void Run()
+    public int Run()
     {
         Start();
 
         Random rand = new Random();
-        Console.WriteLine("\n" + _prompts[rand.Next(_prompts.Count)]);
+
+        if (_unusedPrompts.Count == 0)
+            _unusedPrompts = new List<string>(_prompts);
+
+        int index = rand.Next(_unusedPrompts.Count);
+        string prompt = _unusedPrompts[index];
+        _unusedPrompts.RemoveAt(index);
+
+        Console.WriteLine("\n" + prompt);
 
         Console.Write("\nStart in: ");
         ShowCountdown(5);
 
-        List<string> items = new List<string>();
-
+        int count = 0;
         DateTime endTime = DateTime.Now.AddSeconds(GetDuration());
 
         while (DateTime.Now < endTime)
         {
             Console.Write("> ");
-            items.Add(Console.ReadLine());
+            Console.ReadLine();
+            count++;
         }
 
-        Console.WriteLine($"\nYou listed {items.Count} items!");
+        Console.WriteLine($"\nYou listed {count} items!");
 
         End();
+
+        return count;
     }
 }
