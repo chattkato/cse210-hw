@@ -1,5 +1,15 @@
 using System;
 
+/*
+CREATIVITY EXPLANATION:
+This program exceeds requirements by adding:
+1. Level system (based on score)
+2. Title system (Beginner, Disciple, Warrior, Master)
+3. Streak bonus (extra points after 3 consecutive goal completions)
+
+These features enhance gamification and user motivation.
+*/
+
 class Program
 {
     static void Main(string[] args)
@@ -12,22 +22,18 @@ class Program
             Console.WriteLine("1. Create Goal");
             Console.WriteLine("2. List Goals");
             Console.WriteLine("3. Record Goal");
-            Console.WriteLine("4. Save Goals");
-            Console.WriteLine("5. Load Goals");
+            Console.WriteLine("4. Save");
+            Console.WriteLine("5. Load");
             Console.WriteLine("6. Quit");
 
             manager.DisplayScore();
 
-            Console.Write("Select a choice: ");
+            Console.Write("Choice: ");
             string choice = Console.ReadLine();
 
             if (choice == "1")
             {
-                Console.WriteLine("Select Goal Type:");
-                Console.WriteLine("1. Simple");
-                Console.WriteLine("2. Eternal");
-                Console.WriteLine("3. Checklist");
-
+                Console.WriteLine("1. Simple  2. Eternal  3. Checklist");
                 string type = Console.ReadLine();
 
                 Console.Write("Name: ");
@@ -40,16 +46,14 @@ class Program
                 int points = int.Parse(Console.ReadLine());
 
                 if (type == "1")
-                {
                     manager.AddGoal(new SimpleGoal(name, desc, points));
-                }
+
                 else if (type == "2")
-                {
                     manager.AddGoal(new EternalGoal(name, desc, points));
-                }
+
                 else if (type == "3")
                 {
-                    Console.Write("Target Count: ");
+                    Console.Write("Target: ");
                     int target = int.Parse(Console.ReadLine());
 
                     Console.Write("Bonus: ");
@@ -65,22 +69,19 @@ class Program
             else if (choice == "3")
             {
                 manager.DisplayGoals();
-                Console.Write("Which goal did you complete? ");
+                Console.Write("Select goal #: ");
                 int index = int.Parse(Console.ReadLine()) - 1;
-
                 manager.RecordGoal(index);
             }
             else if (choice == "4")
             {
                 Console.Write("Filename: ");
-                string file = Console.ReadLine();
-                manager.Save(file);
+                manager.Save(Console.ReadLine());
             }
             else if (choice == "5")
             {
                 Console.Write("Filename: ");
-                string file = Console.ReadLine();
-                manager.Load(file);
+                manager.Load(Console.ReadLine());
             }
             else if (choice == "6")
             {

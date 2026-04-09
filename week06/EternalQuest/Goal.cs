@@ -13,19 +13,13 @@ public abstract class Goal
         _points = points;
     }
 
-    public string GetName()
-    {
-        return _name;
-    }
+    public string GetName() => _name;
+    public string GetDescription() => _description;
+    public int GetPoints() => _points;
 
-    public string GetDescription()
+    public virtual string GetDetails()
     {
-        return _description;
-    }
-
-    public int GetPoints()
-    {
-        return _points;
+        return $"{GetStatus()} {_name} ({_description})";
     }
 
     public abstract int RecordEvent();

@@ -1,44 +1,39 @@
-using System;
-
 public class ChecklistGoal : Goal
 {
-    private int _currentCount;
-    private int _targetCount;
+    private int _current;
+    private int _target;
     private int _bonus;
 
-    public ChecklistGoal(string name, string description, int points, int currentCount, int targetCount, int bonus)
-        : base(name, description, points)
+    public ChecklistGoal(string name, string desc, int points, int current, int target, int bonus)
+        : base(name, desc, points)
     {
-        _currentCount = currentCount;
-        _targetCount = targetCount;
+        _current = current;
+        _target = target;
         _bonus = bonus;
     }
 
     public override int RecordEvent()
     {
-        _currentCount++;
-        int pointsEarned = GetPoints();
+        _current++;
+        int earned = GetPoints();
 
-        if (_currentCount == _targetCount)
+        if (_current == _target)
         {
-            pointsEarned += _bonus;
+            earned += _bonus;
         }
 
-        return pointsEarned;
+        return earned;
     }
 
-    public override bool IsComplete()
-    {
-        return _currentCount >= _targetCount;
-    }
+    public override bool IsComplete() => _current >= _target;
 
     public override string GetStatus()
     {
-        return $"[{(IsComplete() ? "X" : " ")}] Completed {_currentCount}/{_targetCount}";
+        return $"[{(IsComplete() ? "X" : " ")}] Completed {_current}/{_target}";
     }
 
     public override string GetSaveString()
     {
-        return $"Checklist|{GetName()}|{GetDescription()}|{GetPoints()}|{_currentCount}|{_targetCount}|{_bonus}";
+        return $"Checklist|{GetName()}|{GetDescription()}|{GetPoints()}|{_current}|{_target}|{_bonus}";
     }
 }

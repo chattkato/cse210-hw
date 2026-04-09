@@ -6,6 +6,7 @@ public class GoalManager
 {
     private List<Goal> _goals = new List<Goal>();
     private int _score = 0;
+    private int _streak = 0;
 
     public void AddGoal(Goal goal)
     {
@@ -17,67 +18,80 @@ public class GoalManager
         Console.WriteLine("\nYour Goals:");
         for (int i = 0; i < _goals.Count; i++)
         {
-            Console.WriteLine($"{i + 1}. {_goals[i].GetStatus()} {_goals[i].GetName()}");
+            Console.WriteLine($"{i + 1}. {_goals[i].GetDetails()}");
         }
     }
 
     public void RecordGoal(int index)
     {
-        if (index >= 0 && index < _goals.Count)
+        int points = _goals[index].RecordEvent();
+
+        if (points > 0)
         {
-            int points = _goals[index].RecordEvent();
-            _score += points;
-            Console.WriteLine($"You earned {points} points!");
+            _streak++;
+        }
+        else
+        {
+            _streak = 0;
+        }
+
+        int bonus = (_streak >= 3) ? 50 : 0;
+
+        _score += points + bonus;
+
+        Console.WriteLine($"You earned {points} points!");
+        if (bonus > 0)
+        {
+            Console.WriteLine("Streak bonus: +50 points!");
         }
     }
 
     public void DisplayScore()
     {
-        Console.WriteLine($"\nCurrent Score: {_score}");
+        Console.WriteLine($"\nScore: {_score}");
+        Console.WriteLine($"Level: {_score / 500}");
+        Console.WriteLine($"Title: {GetTitle()}");
     }
 
-    public void Save(string filename)
+    private string GetTitle()
     {
-        using (StreamWriter writer = new StreamWriter(filename))
+        if (_score < 500) return "Beginner";
+        if (_score < 1500) return "Disciple";
+        if (_score < 3000) return "Warrior";
+        return "Master";
+    }
+
+    public void Save(string file)
+    {
+        using (StreamWriter sw = new StreamWriter(file))
         {
-            writer.WriteLine(_score);
+            sw.WriteLine(_score);
             foreach (Goal g in _goals)
             {
-                writer.WriteLine(g.GetSaveString());
+                sw.WriteLine(g.GetSaveString());
             }
         }
     }
 
-    public void Load(string filename)
+    public void Load(string file)
     {
         _goals.Clear();
+        string[] lines = File.ReadAllLines(file);
 
-        string[] lines = File.ReadAllLines(filename);
         _score = int.Parse(lines[0]);
 
         for (int i = 1; i < lines.Length; i++)
         {
-            string[] parts = lines[i].Split("|");
+            string[] p = lines[i].Split("|");
 
-            if (parts[0] == "Simple")
-            {
-                _goals.Add(new SimpleGoal(parts[1], parts[2], int.Parse(parts[3]), bool.Parse(parts[4])));
-            }
-            else if (parts[0] == "Eternal")
-            {
-                _goals.Add(new EternalGoal(parts[1], parts[2], int.Parse(parts[3])));
-            }
-            else if (parts[0] == "Checklist")
-            {
-                _goals.Add(new ChecklistGoal(
-                    parts[1],
-                    parts[2],
-                    int.Parse(parts[3]),
-                    int.Parse(parts[4]),
-                    int.Parse(parts[5]),
-                    int.Parse(parts[6])
-                ));
-            }
+            if (p[0] == "Simple")
+                _goals.Add(new SimpleGoal(p[1], p[2], int.Parse(p[3]), bool.Parse(p[4])));
+
+            else if (p[0] == "Eternal")
+                _goals.Add(new EternalGoal(p[1], p[2], int.Parse(p[3])));
+
+            else if (p[0] == "Checklist")
+                _goals.Add(new ChecklistGoal(p[1], p[2], int.Parse(p[3]), int.Parse(p[4]), int.Parse(p[5]), int.Parse(p[6])));
         }
     }
 }
